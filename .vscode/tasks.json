@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Install All Dependencies",
+      "type": "shell",
+      "command": "npm run install:all",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Backend",
+      "type": "shell",
+      "command": "npm run backend:dev",
+      "isBackground": true,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "npm run frontend:dev",
+      "isBackground": true,
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Full Stack App",
+      "dependsOn": ["Start Backend", "Start Frontend"],
+      "problemMatcher": []
+    }
+  ]
+}
