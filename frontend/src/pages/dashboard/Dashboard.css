@@ -1,0 +1,289 @@
+.dashboard-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-search {
+  margin-bottom: 1.5rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.dashboard-diagrams-section {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.diagrams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.diagram-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.diagram-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.diagram-preview {
+  height: 160px;
+  background-color: #e0e0e0; /* Grey placeholder box */
+  border-bottom: 1px solid #eee;
+}
+
+.diagram-info {
+  padding: 1rem;
+}
+
+.diagram-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.diagram-info p {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+}
+
+.diagram-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.diagram-btn {
+  background-color: #0078D4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex: 1;
+}
+
+.diagram-btn:hover {
+  background-color: #0066b8;
+}
+
+.diagram-btn.delete {
+  background-color: #d42020;
+}
+
+.diagram-btn.delete:hover {
+  background-color: #b81b1b;
+}
+
+.dashboard-guest {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-guest h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.guest-message {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.guest-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* Removed dashboard-actions class as it's no longer needed */
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.dashboard-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.dashboard-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.dashboard-card p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-button {
+  background-color: #f1f1f1;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dashboard-button:hover {
+  background-color: #e1e1e1;
+}
+
+.dashboard-button-primary {
+  background-color: #0078D4;
+  color: white;
+}
+
+.dashboard-button-primary:hover {
+  background-color: #0069BA;
+}
+
+.dashboard-recent {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.dashboard-recent h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.75rem;
+}
+
+.dashboard-list {
+  padding: 0.5rem 0;
+}
+
+.dashboard-empty {
+  padding: 2rem 0;
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.dashboard-list-item {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+}
+
+.dashboard-list-item:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.dashboard-list-item h4 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.dashboard-list-item p {
+  margin: 0;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.cloud-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cloud-service-card {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.cloud-service-card:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.service-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.cloud-service-card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.cloud-service-card p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+}

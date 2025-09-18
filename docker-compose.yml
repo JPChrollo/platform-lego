@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=
+      - MONGO_INITDB_ROOT_PASSWORD=
+    networks:
+      - platform-lego-network
+      
+  backend:
+    build: 
+      context: ./backend
+    container_name: platform-lego-backend
+    restart: always
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/platform-lego
+      - JWT_SECRET=platform-lego-super-secret-key-replace-in-production
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - platform-lego-network
+      
+networks:
+  platform-lego-network:
+    driver: bridge
+    
+volumes:
+  mongodb_data:
+    driver: local
