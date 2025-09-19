@@ -1,0 +1,30 @@
+/* Global styles for drag and drop operations */
+.drag-ghost {
+  position: absolute;
+  top: -1000px; /* Initially hidden */
+  left: -1000px;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  opacity: 0.9;
+  pointer-events: none; /* Don't interfere with other elements */
+  z-index: 9999;
+}
+
+.drag-ghost .icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.drag-ghost .icon-name {
+  font-size: 12px;
+  text-align: center;
+}

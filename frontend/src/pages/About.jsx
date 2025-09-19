@@ -39,7 +39,7 @@ function About() {
         </p>
         <ul style={{ marginLeft: '2rem', marginTop: '1rem' }}>
           <li>Frontend runs on port 3000 and handles the user interface</li>
-          <li>Backend runs on port 5000 and provides API endpoints</li>
+          <li>Backend runs on port 5002 and provides API endpoints</li>
           <li>API requests from frontend to backend use a Vite proxy for development</li>
         </ul>
       </div>

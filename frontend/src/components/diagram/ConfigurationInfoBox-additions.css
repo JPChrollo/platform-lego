@@ -1,0 +1,30 @@
+.configuration-info-box form {
+  display: contents;
+  pointer-events: auto !important;
+}
+
+/* Add higher z-index to all form controls */
+.configuration-info-box input,
+.configuration-info-box select,
+.configuration-info-box textarea,
+.configuration-info-box button {
+  position: relative;
+  z-index: 10001; /* Even higher than the container */
+  pointer-events: auto !important;
+}
+
+/* Add specific capture for focus/hover states */
+.configuration-info-box input:focus,
+.configuration-info-box select:focus,
+.configuration-info-box textarea:focus {
+  z-index: 10002; /* Higher when focused */
+  outline-color: #40a9ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Ensure the checkbox wrapper properly handles events */
+.checkbox-wrapper {
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto !important;
+}

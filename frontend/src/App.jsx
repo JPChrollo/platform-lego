@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import React from 'react'
 import './App.css'
 import Home from './pages/Home'
 import About from './pages/About'
 import Dashboard from './pages/dashboard/Dashboard'
 import Profile from './pages/Profile/Profile'
+import CreateDiagram from './pages/CreateDiagram/CreateDiagram'
 import Login from './components/auth/Login'
 import CreateAccount from './components/auth/CreateAccount'
 import { authService, userService } from './services/api'
+
+// Lazy load DiagramEditView to improve performance
+const DiagramEditView = React.lazy(() => import('./pages/DiagramEdit/DiagramEditView'))
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -175,6 +180,12 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/create-diagram" element={<CreateDiagram />} />
+            <Route path="/edit-diagram/:id" element={
+              <React.Suspense fallback={<div>Loading diagram editor...</div>}>
+                <DiagramEditView />
+              </React.Suspense>
+            } />
             <Route path="/login" element={<Login />} />
             <Route path="/create-account" element={<CreateAccount />} />
           </Routes>

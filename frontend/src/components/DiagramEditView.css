@@ -1,0 +1,126 @@
+.diagram-edit-view {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  z-index: 100;
+}
+
+.toolbar button, .toolbar label {
+  margin-right: 10px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.toolbar button:hover, .toolbar label:hover {
+  background-color: #45a049;
+}
+
+.toolbar .view-toggle.terraform {
+  background-color: #2196F3;
+}
+
+.toolbar .view-toggle.terraform:hover {
+  background-color: #0b7dda;
+}
+
+.export-button {
+  background-color: #ff9800 !important;
+}
+
+.export-button:hover {
+  background-color: #e68a00 !important;
+}
+
+.import-button {
+  background-color: #2196F3 !important;
+  display: inline-block;
+  text-align: center;
+}
+
+.import-button:hover {
+  background-color: #0b7dda !important;
+}
+
+.diagram-canvas {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background-color: #f9f9f9;
+  background-image: linear-gradient(#e1e1e1 1px, transparent 1px),
+                    linear-gradient(90deg, #e1e1e1 1px, transparent 1px);
+  background-size: 20px 20px;
+  margin: 0 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.diagram-component {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: move;
+  transition: box-shadow 0.2s, transform 0.2s;
+  min-width: 80px;
+  z-index: 10;
+}
+
+.diagram-component:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  z-index: 20;
+}
+
+.diagram-component.selected {
+  border: 2px solid #4CAF50;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+  z-index: 30;
+}
+
+.component-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.component-icon img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.component-label {
+  margin-top: 8px;
+  font-size: 12px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.terraform-view-container {
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  overflow: hidden;
+}

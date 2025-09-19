@@ -29,7 +29,7 @@ fullstack-app/
    ```
    npm run dev
    ```
-   The server will run on http://localhost:5000 by default.
+   The server will run on http://localhost:5002 by default.
 
 ### Setting up the Frontend
 1. Navigate to the frontend directory:

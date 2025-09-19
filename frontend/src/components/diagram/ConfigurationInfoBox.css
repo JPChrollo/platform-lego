@@ -1,0 +1,233 @@
+.configuration-info-box {
+  position: absolute;
+  width: 320px;
+  background-color: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 9999; /* Extremely high z-index to ensure it's above everything */
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.2s ease-in-out;
+  overflow: hidden;
+  /* Prevent clicks from passing through */
+  pointer-events: auto !important;
+  /* Isolate the element to prevent event bubbling */
+  isolation: isolate;
+  /* Ensure the configuration box captures all events */
+  touch-action: none;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.config-header {
+  background-color: #f3f5f7;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.config-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.close-config-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.close-config-btn:hover {
+  color: #333;
+}
+
+.config-content {
+  padding: 16px;
+  overflow-y: auto;
+  /* Prevent event bubbling */
+  isolation: isolate;
+}
+
+.config-field {
+  margin-bottom: 16px;
+}
+
+.config-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.required-mark {
+  color: #ff4d4f;
+  font-weight: normal;
+}
+
+.config-field input,
+.config-field select,
+.config-field textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s;
+  /* Ensure inputs get all events */
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 10000; /* Higher than the box itself */
+}
+
+.config-field input[type="text"],
+.config-field textarea,
+.config-field select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  /* Prevent event propagation issues */
+  position: relative;
+  z-index: 1500;
+  pointer-events: auto !important;
+}
+
+.config-field input[type="text"]:focus,
+.config-field textarea:focus,
+.config-field select:focus {
+  border-color: #1890ff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.config-field input[type="text"].error,
+.config-field textarea.error,
+.config-field select.error {
+  border-color: #ff4d4f;
+}
+
+.config-field.has-error label {
+  color: #ff4d4f;
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.config-field textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.complex-field {
+  margin-top: 4px;
+}
+
+.configure-complex-btn {
+  padding: 6px 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.configure-complex-btn:hover {
+  background-color: #e6f7ff;
+  border-color: #91d5ff;
+}
+
+.config-actions {
+  padding: 12px 16px;
+  border-top: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.save-config-btn {
+  padding: 8px 16px;
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.save-config-btn:hover {
+  background-color: #40a9ff;
+}
+
+.save-config-btn:active {
+  background-color: #096dd9;
+}
+
+/* Tags field styles */
+.tags-field {
+  margin-top: 8px;
+}.configuration-info-box form {
+  display: contents;
+  pointer-events: auto !important;
+}
+
+/* Add higher z-index to all form controls */
+.configuration-info-box input,
+.configuration-info-box select,
+.configuration-info-box textarea,
+.configuration-info-box button {
+  position: relative;
+  z-index: 10001; /* Even higher than the container */
+  pointer-events: auto !important;
+}
+
+/* Add specific capture for focus/hover states */
+.configuration-info-box input:focus,
+.configuration-info-box select:focus,
+.configuration-info-box textarea:focus {
+  z-index: 10002; /* Higher when focused */
+  outline-color: #40a9ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Ensure the checkbox wrapper properly handles events */
+.checkbox-wrapper {
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto !important;
+}

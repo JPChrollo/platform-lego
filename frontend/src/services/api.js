@@ -1,14 +1,18 @@
 import axios from 'axios';
 
-// API base URL
+// API base URL - use the environment variable if available, otherwise default to localhost:5002
 const API_URL = 'http://localhost:5002/api';
 
-// Create an axios instance
+// Log the API URL being used
+console.log('API Service initialized with URL:', API_URL);
+
+// Create an axios instance with increased timeout
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  timeout: 10000 // 10 seconds timeout
 });
 
 // Add a request interceptor to include auth token in all requests
@@ -50,7 +54,27 @@ export const authService = {
   
   // Login user
   login: async (credentials) => {
-    return api.post('/users/login', credentials);
+    try {
+      console.log('Attempting login with credentials:', {
+        username: credentials.username,
+        passwordLength: credentials.password ? credentials.password.length : 0
+      });
+      
+      // Try direct axios call if the api instance is having issues
+      const response = await api.post('/users/login', credentials);
+      console.log('Login API response:', response.data);
+      return response;
+    } catch (error) {
+      console.error('Login API error:', error);
+      
+      // Enhanced error handling
+      if (!error.response) {
+        console.error('Network error - no response received');
+        throw new Error('Network error. Please check if the server is running and accessible.');
+      }
+      
+      throw error;
+    }
   },
   
   // Get current user profile
@@ -75,6 +99,46 @@ export const userService = {
   // Update user profile
   updateProfile: async (userData) => {
     return api.put('/users/profile', userData);
+  }
+};
+
+// Diagram services
+export const diagramService = {
+  // Get all diagrams for current user
+  getUserDiagrams: async () => {
+    return api.get('/diagrams');
+  },
+  
+  // Get diagram by ID
+  getDiagram: async (diagramId) => {
+    return api.get(`/diagrams/${diagramId}`);
+  },
+  
+  // Create new diagram
+  createDiagram: async (diagramData) => {
+    return api.post('/diagrams', diagramData);
+  },
+  
+  // Update diagram
+  updateDiagram: async (diagramId, diagramData) => {
+    console.log('Updating diagram with ID:', diagramId);
+    console.log('Diagram update data:', diagramData);
+    return api.put(`/diagrams/${diagramId}`, diagramData);
+  },
+  
+  // Delete diagram
+  deleteDiagram: async (diagramId) => {
+    return api.delete(`/diagrams/${diagramId}`);
+  },
+  
+  // Add component to diagram
+  addComponent: async (diagramId, componentData) => {
+    return api.post(`/diagrams/${diagramId}/components`, componentData);
+  },
+  
+  // Remove component from diagram
+  removeComponent: async (diagramId, componentId) => {
+    return api.delete(`/diagrams/${diagramId}/components/${componentId}`);
   }
 };
 

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 // Generate JWT token
 const generateToken = (userId) => {
+  console.log(`Generating JWT token for user ${userId}`);
   return jwt.sign(
     { id: userId },
     process.env.JWT_SECRET || 'your-default-secret-key',
@@ -15,24 +16,40 @@ const generateToken = (userId) => {
 // @access  Public
 export const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, firstName, lastName } = req.body;
+    console.log(`Register attempt for username: ${username}, email: ${email}`);
 
-    // Check if user already exists
-    const userExists = await User.findOne({ $or: [{ email }, { username }] });
-    
-    if (userExists) {
+    // Check if user already exists by username or email
+    const userExistsByUsername = await User.findOne({ username });
+    const userExistsByEmail = await User.findOne({ email });
+
+    if (userExistsByUsername) {
+      console.log(`Registration failed: Username ${username} already exists`);
       return res.status(400).json({
         success: false,
-        message: 'User with this email or username already exists'
+        message: 'Username already exists'
       });
     }
 
-    // Create new user
+    if (userExistsByEmail) {
+      console.log(`Registration failed: Email ${email} already exists`);
+      return res.status(400).json({
+        success: false,
+        message: 'Email already exists'
+      });
+    }
+
+    // Create user with properly initialized diagrams array
     const user = await User.create({
       username,
       email,
-      password
+      password,
+      firstName: firstName || '',
+      lastName: lastName || '',
+      diagrams: [] // Initialize diagrams array as empty
     });
+
+    console.log(`User registered successfully: ${username}, ID: ${user._id}`);
 
     // Generate token
     const token = generateToken(user._id);
@@ -44,14 +61,32 @@ export const registerUser = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-        profile_picture: user.profile_picture,
-        diagrams: user.diagrams
+        firstName: user.firstName,
+        lastName: user.lastName,
+        diagrams: []
       }
     });
   } catch (error) {
+    console.error('Error registering user:', error);
+    
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const validationErrors = {};
+      
+      for (const field in error.errors) {
+        validationErrors[field] = error.errors[field].message;
+      }
+      
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: validationErrors
+      });
+    }
+    
     res.status(500).json({
       success: false,
-      message: error.message
+      message: 'Server error during registration'
     });
   }
 };
@@ -65,7 +100,7 @@ export const loginUser = async (req, res) => {
     console.log(`Login attempt for username: ${username}`);
 
     // Find user by username and include password in the result
-    const user = await User.findOne({ username }).select('+password');
+    const user = await User.findOne({ username }).select('+password').populate('diagrams');
     
     if (!user) {
       console.log(`User not found: ${username}`);
@@ -100,6 +135,15 @@ export const loginUser = async (req, res) => {
         message: 'Error validating credentials'
       });
     }
+    
+    // Initialize diagrams array if it doesn't exist
+    if (!user.diagrams) {
+      console.log(`User ${user._id} has no diagrams array, initializing it`);
+      user.diagrams = [];
+      await user.save();
+    } else {
+      console.log(`User ${user._id} has ${user.diagrams.length} diagrams`);
+    }
 
     // Generate token
     const token = generateToken(user._id);
@@ -128,14 +172,29 @@ export const loginUser = async (req, res) => {
 // @access  Private
 export const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    console.log(`Fetching profile for user ID: ${req.user._id}`);
+    
+    // Use populate to get the actual diagram details
+    const user = await User.findById(req.user._id).populate('diagrams');
 
     if (!user) {
+      console.log(`User not found: ${req.user._id}`);
       return res.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
+
+    console.log(`Profile found for user ${user.username}`);
+    
+    // Initialize diagrams array if it doesn't exist
+    if (!user.diagrams) {
+      console.log(`User ${user._id} has no diagrams array, initializing it`);
+      user.diagrams = [];
+      await user.save();
+    }
+    
+    console.log(`User has ${user.diagrams.length} diagrams`);
 
     res.status(200).json({
       success: true,
@@ -143,14 +202,24 @@ export const getUserProfile = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
         profile_picture: user.profile_picture,
         diagrams: user.diagrams
       }
     });
   } catch (error) {
+    console.error('Error fetching user profile:', error);
+    
+    let errorMessage = 'Failed to fetch user profile';
+    
+    if (error.name === 'CastError') {
+      errorMessage = 'Invalid user ID format';
+    }
+    
     res.status(500).json({
       success: false,
-      message: error.message
+      message: errorMessage
     });
   }
 };

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { userService, authService } from '../../services/api';
+import { userService, authService, diagramService } from '../../services/api';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -10,6 +10,8 @@ function Dashboard() {
   const [diagrams, setDiagrams] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateMessage, setShowCreateMessage] = useState(false);
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -24,25 +26,52 @@ function Dashboard() {
     if (createAttempt && !isLoggedInValue) {
       setShowCreateMessage(true);
     }
+    
+    // Check for success message from Create Diagram page
+    if (location.state?.success && location.state?.message) {
+      setSuccessMessage(location.state.message);
+      // Clear the message after 5 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 5000);
+    }
 
     if (!token) {
       setIsLoading(false);
       return;
     }
 
-    const fetchUserData = async () => {
+    const fetchData = async () => {
+      setError('');
+      
       try {
         // Get user profile from the API
-        const response = await userService.getUserProfile();
+        const userResponse = await userService.getUserProfile();
         
-        if (response.data.success) {
-          setUser(response.data.user);
+        if (userResponse.data.success) {
+          setUser(userResponse.data.user);
+          
+          // Fetch user's diagrams
+          const diagramsResponse = await diagramService.getUserDiagrams();
+          
+          // Format the diagrams data
+          const formattedDiagrams = diagramsResponse.data.map(diagram => ({
+            id: diagram._id,
+            name: diagram.name,
+            lastModified: new Date(diagram.updated_at).toLocaleDateString(),
+            components: diagram.cloud_components?.length || 0,
+            cloudProvider: diagram.base,
+            description: `${diagram.base} diagram` // Using cloud provider as description
+          }));
+          
+          setDiagrams(formattedDiagrams);
         } else {
           // If API returns error, redirect to login
           navigate('/login');
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching data:', error);
+        setError('Failed to load diagrams. Please try again.');
         
         // If token is invalid or expired, clear auth data and redirect to login
         if (error.response && error.response.status === 401) {
@@ -50,20 +79,12 @@ function Dashboard() {
           navigate('/login');
         }
       } finally {
-        // Load demo diagrams (in a real app, these would come from the API)
-        setDiagrams([
-          { id: 1, name: 'Web Application Architecture', lastModified: '2023-05-15', components: 5, description: 'Cloud-based web application architecture' },
-          { id: 2, name: 'Data Processing Pipeline', lastModified: '2023-05-10', components: 8, description: 'Big data processing workflow' },
-          { id: 3, name: 'Microservices Infrastructure', lastModified: '2023-05-20', components: 12, description: 'Containerized microservices architecture' },
-          { id: 4, name: 'IoT Platform', lastModified: '2023-05-08', components: 7, description: 'Internet of Things data collection platform' }
-        ]);
-        
         setIsLoading(false);
       }
     };
 
-    fetchUserData();
-  }, [navigate]);
+    fetchData();
+  }, [navigate, location.state]);
 
   if (isLoading) {
     return <div className="dashboard-loading">Loading dashboard...</div>;
@@ -75,8 +96,53 @@ function Dashboard() {
     diagram.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Handler for creating new diagram
+  const handleCreateDiagram = () => {
+    navigate('/create-diagram');
+  };
+  
+  // Handler for editing diagram
+  const handleEditDiagram = (diagramId) => {
+    console.log(`Navigating to edit diagram with ID: ${diagramId}`);
+    navigate(`/edit-diagram/${diagramId}`);
+  };
+  
+  // Handler for deleting diagram
+  const handleDeleteDiagram = async (diagramId, diagramName) => {
+    if (window.confirm(`Are you sure you want to delete "${diagramName}"?`)) {
+      try {
+        await diagramService.deleteDiagram(diagramId);
+        
+        // Remove diagram from state
+        setDiagrams(diagrams.filter(diagram => diagram.id !== diagramId));
+        setSuccessMessage(`"${diagramName}" has been deleted successfully.`);
+        
+        // Clear the message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage('');
+        }, 5000);
+      } catch (error) {
+        console.error('Error deleting diagram:', error);
+        setError('Failed to delete diagram. Please try again.');
+        
+        // Clear the error after 5 seconds
+        setTimeout(() => {
+          setError('');
+        }, 5000);
+      }
+    }
+  };
+
   return (
     <div className="dashboard-container">
+      {successMessage && (
+        <div className="success-message">{successMessage}</div>
+      )}
+      
+      {error && (
+        <div className="error-message">{error}</div>
+      )}
+      
       {isLoggedIn ? (
         <>
           <div className="dashboard-header">
@@ -95,27 +161,56 @@ function Dashboard() {
           </div>
 
           <div className="dashboard-diagrams-section">
-            <h2>My Diagrams</h2>
+            <div className="diagrams-header">
+              <h2>My Diagrams</h2>
+              <button className="create-diagram-btn" onClick={handleCreateDiagram}>
+                Create New Diagram
+              </button>
+            </div>
+            
             {diagrams.length > 0 ? (
               <div className="diagrams-grid">
                 {filteredDiagrams.map(diagram => (
-                  <div key={diagram.id} className="diagram-card">
+                  <div 
+                    key={diagram.id} 
+                    className="diagram-card" 
+                    onClick={() => handleEditDiagram(diagram.id)}
+                  >
                     <div className="diagram-preview">
-                      {/* Grey placeholder box for diagram preview */}
+                      {/* Show cloud provider icon or name */}
+                      <div className="cloud-provider-icon">
+                        {diagram.cloudProvider}
+                      </div>
                     </div>
                     <div className="diagram-info">
                       <h3>{diagram.name}</h3>
                       <p>Last modified: {diagram.lastModified}</p>
-                      <div className="diagram-actions">
-                        <button className="diagram-btn edit">Edit</button>
-                        <button className="diagram-btn delete">Delete</button>
+                      <p>Components: {diagram.components}</p>
+                      <div className="diagram-actions" onClick={(e) => e.stopPropagation()}>
+                        <button 
+                          className="diagram-btn edit"
+                          onClick={() => handleEditDiagram(diagram.id)}
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          className="diagram-btn delete"
+                          onClick={() => handleDeleteDiagram(diagram.id, diagram.name)}
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="dashboard-empty">No diagrams created yet. Start by creating your first diagram!</p>
+              <div className="dashboard-empty">
+                <p>No diagrams created yet. Start by creating your first diagram!</p>
+                <button className="create-first-diagram-btn" onClick={handleCreateDiagram}>
+                  Create Your First Diagram
+                </button>
+              </div>
             )}
           </div>
         </>

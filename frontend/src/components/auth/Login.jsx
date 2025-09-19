@@ -112,14 +112,7 @@ function Login() {
     <div className="login-container">
       <div className="login-form-container">
         <h2>Login</h2>
-        
-        {/* Debugging info - can be removed in production */}
-        <div style={{ padding: '10px', margin: '10px 0', backgroundColor: '#f0f0f0', border: '1px solid #ddd' }}>
-          <p><strong>Debug - Auth State:</strong></p>
-          <p>hasLoginFailed: {hasLoginFailed ? 'true' : 'false'}</p>
-          <p>loginError: {loginError || 'none'}</p>
-          <p>isLoggedIn: {localStorage.getItem('isLoggedIn') === 'true' ? 'true' : 'false'}</p>
-        </div>
+
         
         {/* Show error message - simplifying condition */}
         {loginError ? (

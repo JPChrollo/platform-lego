@@ -1,0 +1,47 @@
+{
+  "users": [
+    {
+      "email": "testuser@example.com",
+      "password": "Password123!",
+      "name": "Test User"
+    },
+    {
+      "email": "admin@example.com",
+      "password": "AdminPassword123!",
+      "name": "Admin User"
+    }
+  ],
+  "diagrams": [
+    {
+      "id": "sample-diagram-1",
+      "name": "Test AWS Architecture",
+      "base": "AWS",
+      "cloud_components": [
+        {
+          "_id": "comp1",
+          "component_type": "ec2",
+          "name": "Web Server",
+          "position_x": 100,
+          "position_y": 150,
+          "configuration": {
+            "Name": "web-server-1",
+            "Instance Type": "t2.micro",
+            "AMI ID": "ami-12345678"
+          }
+        },
+        {
+          "_id": "comp2",
+          "component_type": "s3",
+          "name": "Static Assets",
+          "position_x": 300,
+          "position_y": 150,
+          "configuration": {
+            "Bucket Name": "static-assets-bucket",
+            "Region": "us-east-1",
+            "Access Control": "private"
+          }
+        }
+      ]
+    }
+  ]
+}

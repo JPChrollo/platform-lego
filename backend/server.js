@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
+import diagramRoutes from './routes/diagramRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -19,10 +20,18 @@ const __dirname = path.dirname(__filename);
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 
 // Middleware
-app.use(cors());
+// Configure CORS with specific options
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5002'], // Add your frontend URLs here
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev')); // Logging
@@ -41,6 +50,9 @@ app.get('/api/health', (req, res) => {
 
 // User routes
 app.use('/api/users', userRoutes);
+
+// Diagram routes
+app.use('/api/diagrams', diagramRoutes);
 
 // Catch-all route for handling 404s
 app.use((req, res) => {

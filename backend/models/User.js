@@ -46,7 +46,8 @@ const userSchema = new mongoose.Schema({
     default: 'default-profile.png' // Default profile picture
   },
   diagrams: [{
-    type: String, // IDs or references to diagrams
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Diagram'
   }],
   created_at: {
     type: Date,
